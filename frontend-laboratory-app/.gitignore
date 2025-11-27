@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+ /node_modules/@heroicons
+ /node_modules/@heroicons/react
 /.pnp
 .pnp.*
 .yarn/*
