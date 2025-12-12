@@ -6,7 +6,7 @@ import { useAuth } from '@/app/lib/AuthContext';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, loading } = useAuth(); // Używamy prawdziwego stanu użytkownika z Firebase
+  const { user, loading } = useAuth();
 
   return (
     <nav className="relative bg-white shadow dark:bg-gray-800">
@@ -49,16 +49,6 @@ function Navbar() {
                 Strona główna
               </Link>
               
-              {user && (
-                <>
-                  <Link href="/user/profile" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    Profil
-                  </Link>
-                  <Link href="/user/changepassword" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    Zmień hasło
-                  </Link>
-                </>
-              )}
             </div>
 
             <div className="flex items-center mt-4 lg:mt-0">
@@ -69,12 +59,29 @@ function Navbar() {
                 </div>
               ) : user ? (
                 // WIDOK 1: Użytkownik ZALOGOWANY
-                <Link 
-                  href="/user/signout"
-                  className="px-3 py-2 mx-3 mt-2 text-white bg-red-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-red-600"
-                >
-                  Wyloguj
-                </Link>
+                <div className="flex items-center gap-3">
+                  <Link 
+                    href="/user/profile"
+                    className="flex items-center gap-2 px-3 py-2 transition-colors duration-300 transform rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <img 
+                      src={user.photoURL || "https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg"} 
+                      alt="Profile" 
+                      className="w-8 h-8 rounded-full object-cover border-2 border-blue-500"
+                    />
+                    <span className="text-gray-700 dark:text-gray-200 font-medium hidden sm:block">
+                      {user.displayName || user.email?.split('@')[0] || 'Użytkownik'}
+                    </span>
+                  </Link>
+
+                  {/* Przycisk Wyloguj */}
+                  <Link 
+                    href="/user/signout"
+                    className="px-3 py-2 text-white bg-red-500 transition-colors duration-300 transform rounded-md hover:bg-red-600"
+                  >
+                    Wyloguj
+                  </Link>
+                </div>
               ) : (
                 // WIDOK 2: Użytkownik WYLOGOWANY
                 <>
