@@ -1,8 +1,10 @@
 'use client'
 import { updateProfile } from "firebase/auth";
 import { useAuth } from "@/app/lib/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { db } from '@/app/lib/firebase';
+import { setDoc, doc, getDoc } from 'firebase/firestore';
 
 export default function ProfileForm() {
   const { user } = useAuth();
@@ -10,6 +12,33 @@ export default function ProfileForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingAddress, setLoadingAddress] = useState(true);
+  const [address, setAddress] = useState({ street: "", city: "", zipCode: "" });
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      if (!user?.uid) return;
+      
+      setLoadingAddress(true);
+      try {
+        const snapshot = await getDoc(doc(db, "users", user?.uid));
+        if (snapshot.exists() && snapshot.data().address) {
+          const addressData = snapshot.data().address;
+          setAddress({
+            street: addressData.street || "",
+            city: addressData.city || "",
+            zipCode: addressData.zipCode || ""
+          });
+        }
+      } catch (error) {
+        console.error("Błąd podczas pobierania adresu:", error);
+      } finally {
+        setLoadingAddress(false);
+      }
+    };
+
+    fetchAddress();
+  }, [user?.uid]);
 
   if (!user) {
     return (
@@ -19,7 +48,7 @@ export default function ProfileForm() {
     );
   }
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -28,25 +57,38 @@ export default function ProfileForm() {
     const data = {
       displayName: e.target["displayName"].value,
       photoURL: e.target["photoURL"].value,
+      street: address.street,
+      city: address.city,
+      zipCode: address.zipCode,
     };
 
-    updateProfile(user, {
-      displayName: data.displayName,
-      photoURL: data.photoURL,
-    })
-      .then(() => {
-        console.log("Profile updated");
-        setSuccess("Profil został zaktualizowany pomyślnie!");
-        setLoading(false);
-        
-        setTimeout(() => {
-          router.refresh();
-        }, 1500);
-      })
-      .catch((error) => {
-        setError(error.message);
-        setLoading(false);
+    try {
+      // Aktualizacja profilu Firebase Auth
+      await updateProfile(user, {
+        displayName: data.displayName,
+        photoURL: data.photoURL,
       });
+
+      // Zapisanie adresu do Firestore
+      await setDoc(doc(db, "users", user?.uid), {
+        address: {
+          city: data.city,
+          street: data.street,
+          zipCode: data.zipCode
+        }
+      });
+
+      console.log("Profile and address updated");
+      setSuccess("Profil i adres zostały zaktualizowane pomyślnie!");
+      setLoading(false);
+      
+      setTimeout(() => {
+        router.refresh();
+      }, 1500);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
   };
 
   return (
@@ -163,13 +205,74 @@ export default function ProfileForm() {
             />
           </div>
 
+          {/* Pole: street */}
+          <div className="relative flex items-center mt-4">
+            <span className="absolute">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+            </span>
+
+            <input 
+              type="text" 
+              id="street"
+              name="street"
+              value={address.street}
+              onChange={(e) => setAddress({ ...address, street: e.target.value })}
+              disabled={loadingAddress}
+              placeholder="Ulica i numer"
+              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 disabled:opacity-50 disabled:cursor-not-allowed" 
+            />
+          </div>
+
+          {/* Pole: city */}
+          <div className="relative flex items-center mt-4">
+            <span className="absolute">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </span>
+
+            <input 
+              type="text" 
+              id="city"
+              name="city"
+              value={address.city}
+              onChange={(e) => setAddress({ ...address, city: e.target.value })}
+              disabled={loadingAddress}
+              placeholder="Miasto"
+              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 disabled:opacity-50 disabled:cursor-not-allowed" 
+            />
+          </div>
+
+          {/* Pole: zipCode */}
+          <div className="relative flex items-center mt-4">
+            <span className="absolute">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </span>
+
+            <input 
+              type="text" 
+              id="zipCode"
+              name="zipCode"
+              value={address.zipCode}
+              onChange={(e) => setAddress({ ...address, zipCode: e.target.value })}
+              disabled={loadingAddress}
+              placeholder="Kod pocztowy"
+              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 disabled:opacity-50 disabled:cursor-not-allowed" 
+            />
+          </div>
+
           <div className="mt-6">
             <button 
               type="submit"
-              disabled={loading}
+              disabled={loading || loadingAddress}
               className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Zapisywanie...' : 'Zapisz zmiany'}
+              {loading ? 'Zapisywanie...' : loadingAddress ? 'Ładowanie danych...' : 'Zapisz zmiany'}
             </button>
           </div>
 
