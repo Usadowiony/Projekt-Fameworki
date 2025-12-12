@@ -4,6 +4,11 @@ import React, { useState } from 'react';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const handleLogout = () => {
+    // tymczasowa logika logowania
+    setIsLoggedIn(false);
+  };
 
   return (
     <nav className="relative bg-white shadow dark:bg-gray-800">
@@ -57,15 +62,41 @@ function Navbar() {
             </div>
 
             <div className="flex items-center mt-4 lg:mt-0">
-
-              <button type="button" className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
-                <div className="w-8 h-8 overflow-hidden border-2 border-gray-400 rounded-full">
-                  <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80" className="object-cover w-full h-full" alt="avatar" />
-                </div>
-
-                <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">Nazwa użytkownika</h3>
+            {isLoggedIn ? (
+              // WIDOK 1: Użytkownik ZALOGOWANY
+              <button 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLogout();
+                }} 
+                className="px-3 py-2 mx-3 mt-2 text-white bg-red-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-red-600"
+              >
+                Wyloguj
               </button>
-            </div>
+            ) : (
+              // WIDOK 2: Użytkownik WYLOGOWANY
+              <>
+                <button 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLogout();
+                }} 
+                className="px-3 py-2 mx-3 mt-2 text-white bg-red-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-red-600"
+              >
+                Zaloguj
+              </button>
+                <button 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLogout();
+                }} 
+                className="px-3 py-2 mx-3 mt-2 text-white bg-red-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-red-600"
+              >
+                Zarejestruj
+              </button>
+              </>
+            )}
+          </div>
           </div>
         </div>
       </div>
