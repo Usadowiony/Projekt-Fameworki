@@ -28,11 +28,11 @@ export default function VerifyEmail() {
           </h1>
 
           <p className="text-gray-600 dark:text-gray-400 mb-2">
-            Konto zostało utworzone pomyślnie!
+            Twój email wymaga weryfikacji.
           </p>
 
           <p className="text-gray-600 dark:text-gray-400 mb-8">
-            Wysłaliśmy email weryfikacyjny na podany adres. Kliknij w link w emailu, aby aktywować swoje konto.
+            Wysłaliśmy email weryfikacyjny na podany adres. Kliknij w link w emailu, aby aktywować swoje konto i móc się zalogować.
           </p>
 
           <div className="space-y-4">

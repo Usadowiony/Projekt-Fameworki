@@ -1,6 +1,5 @@
 'use client'
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { auth } from "@/app/lib/firebase";
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { useAuth } from "@/app/lib/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -21,6 +20,7 @@ export default function RegisterForm() {
     setError("");
     setLoading(true);
     
+    const username = e.target["username"].value;
     const email = e.target["email"].value;
     const password = e.target["password"].value;
     const confirmPassword = e.target["confirm-password"].value;
@@ -41,25 +41,36 @@ export default function RegisterForm() {
       .then((userCredential) => {
         console.log("User registered!");
         
-        sendEmailVerification(auth.currentUser)
-          .then(() => {
-            console.log("Email verification sent!");
-            router.push("/user/verify");
-          })
-          .catch((error) => {
-            setError("Nie udało się wysłać emaila weryfikacyjnego");
-            setLoading(false);
-          });
+        const profilePromise = username 
+          ? updateProfile(userCredential.user, { displayName: username })
+          : Promise.resolve();
+        
+        return profilePromise.then(() => {
+          console.log("Wysyłam email weryfikacyjny do:", userCredential.user.email);
+          return sendEmailVerification(userCredential.user);
+        });
+      })
+      .then(() => {
+        console.log("Email verification sent successfully!");
+        router.push("/user/verify");
       })
       .catch((error) => {
         setLoading(false);
-        const errorMessages = {
-          'auth/email-already-in-use': 'Ten email jest już zarejestrowany',
-          'auth/invalid-email': 'Nieprawidłowy format email',
-          'auth/weak-password': 'Hasło jest zbyt słabe',
-          'auth/operation-not-allowed': 'Rejestracja jest obecnie wyłączona'
-        };
-        setError(errorMessages[error.code] || error.message);
+        
+        if (error.code?.startsWith('auth/')) {
+          console.error("BŁĄD:", error.code, error.message);
+          
+          const errorMessages = {
+            'auth/email-already-in-use': 'Ten email jest już zarejestrowany',
+            'auth/invalid-email': 'Nieprawidłowy format email',
+            'auth/weak-password': 'Hasło jest zbyt słabe',
+            'auth/operation-not-allowed': 'Rejestracja jest obecnie wyłączona'
+          };
+          setError(errorMessages[error.code] || error.message);
+        } else {
+          console.error("BŁĄD wysyłki emaila:", error);
+          setError("Nie udało się wysłać emaila weryfikacyjnego: " + error.message);
+        }
       });
   };
 
@@ -96,6 +107,22 @@ export default function RegisterForm() {
               </div>
             </div>
           )}
+
+          <div className="relative flex items-center mt-8">
+            <span className="absolute">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </span>
+
+            <input 
+              type="text" 
+              id="username"
+              name="username"
+              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" 
+              placeholder="Nazwa użytkownika (opcjonalne)"
+            />
+          </div>
 
           <div className="relative flex items-center mt-6">
             <span className="absolute">

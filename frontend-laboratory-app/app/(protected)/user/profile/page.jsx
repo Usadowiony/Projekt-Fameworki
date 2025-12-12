@@ -2,19 +2,20 @@
 import { updateProfile } from "firebase/auth";
 import { useAuth } from "@/app/lib/AuthContext";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ProfileForm() {
   const { user } = useAuth();
+  const router = useRouter();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Jeśli użytkownik nie jest zalogowany, nie pokazuj formularza
   if (!user) {
     return (
-      <section className="bg-white dark:bg-gray-900 min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <p className="text-gray-600 dark:text-gray-400">Ładowanie...</p>
-      </section>
+      </div>
     );
   }
 
@@ -37,6 +38,10 @@ export default function ProfileForm() {
         console.log("Profile updated");
         setSuccess("Profil został zaktualizowany pomyślnie!");
         setLoading(false);
+        
+        setTimeout(() => {
+          router.refresh();
+        }, 1500);
       })
       .catch((error) => {
         setError(error.message);
@@ -45,37 +50,18 @@ export default function ProfileForm() {
   };
 
   return (
-    <section className="bg-white dark:bg-gray-900 min-h-screen">
-      <div className="container flex items-center justify-center px-6 py-12 mx-auto">
+    <section className="bg-white dark:bg-gray-900">
+      <div className="container flex items-center justify-center min-h-screen px-6 mx-auto">
         <form onSubmit={onSubmit} className="w-full max-w-md">
-          <div className="flex justify-center mx-auto">
+          <div className="flex justify-center mx-auto mb-6">
             <img className="w-auto h-7 sm:h-8" src="https://merakiui.com/images/logo.svg" alt="" />
           </div>
 
-          <h2 className="mt-6 text-2xl font-semibold text-gray-800 dark:text-white text-center">
+          <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-white mb-6">
             Edytuj profil
           </h2>
 
-          <p className="mt-2 text-gray-600 dark:text-gray-400 text-center text-sm">
-            Zaktualizuj swoje dane osobowe
-          </p>
-
-          {error && (
-            <div className="flex w-full mt-6 overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
-              <div className="flex items-center justify-center w-12 bg-red-500">
-                <svg className="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 3.36667C10.8167 3.36667 3.3667 10.8167 3.3667 20C3.3667 29.1833 10.8167 36.6333 20 36.6333C29.1834 36.6333 36.6334 29.1833 36.6334 20C36.6334 10.8167 29.1834 3.36667 20 3.36667ZM19.1334 33.3333V22.9H13.3334L21.6667 6.66667V17.1H27.25L19.1334 33.3333Z" />
-                </svg>
-              </div>
-              <div className="px-4 py-2 -mx-3">
-                <div className="mx-3">
-                  <span className="font-semibold text-red-500 dark:text-red-400">Błąd</span>
-                  <p className="text-sm text-gray-600 dark:text-gray-200">{error}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
+          {/* Alert sukcesu */}
           {success && (
             <div className="flex w-full mt-6 overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
               <div className="flex items-center justify-center w-12 bg-green-500">
@@ -92,17 +78,38 @@ export default function ProfileForm() {
             </div>
           )}
 
-          <div className="flex justify-center mt-8">
-            <div className="relative">
-              <img 
-                src={user.photoURL || "https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg"} 
-                alt="Profile" 
-                className="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
-              />
+          {/* Alert błędu */}
+          {error && (
+            <div className="flex w-full mt-6 overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+              <div className="flex items-center justify-center w-12 bg-red-500">
+                <svg className="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 3.36667C10.8167 3.36667 3.3667 10.8167 3.3667 20C3.3667 29.1833 10.8167 36.6333 20 36.6333C29.1834 36.6333 36.6334 29.1833 36.6334 20C36.6334 10.8167 29.1834 3.36667 20 3.36667ZM19.1334 33.3333V22.9H13.3334L21.6667 6.66667V17.1H27.25L19.1334 33.3333Z" />
+                </svg>
+              </div>
+              <div className="px-4 py-2 -mx-3">
+                <div className="mx-3">
+                  <span className="font-semibold text-red-500 dark:text-red-400">Błąd</span>
+                  <p className="text-sm text-gray-600 dark:text-gray-200">{error}</p>
+                </div>
+              </div>
             </div>
+          )}
+
+          {/* Podgląd zdjęcia profilowego */}
+          <div className="flex justify-center mt-6 mb-4">
+            <img 
+              src={user.photoURL || "https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg"} 
+              alt="Profile" 
+              className="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
+            />
           </div>
 
-          <div className="relative flex items-center mt-8">
+          <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-6">
+            Aktualne zdjęcie profilowe
+          </p>
+
+          {/* Pole: displayName */}
+          <div className="relative flex items-center mt-6">
             <span className="absolute">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -119,6 +126,7 @@ export default function ProfileForm() {
             />
           </div>
 
+          {/* Pole: email (tylko do odczytu) */}
           <div className="relative flex items-center mt-4">
             <span className="absolute">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -137,6 +145,7 @@ export default function ProfileForm() {
             />
           </div>
 
+          {/* Pole: photoURL */}
           <div className="relative flex items-center mt-4">
             <span className="absolute">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -154,10 +163,6 @@ export default function ProfileForm() {
             />
           </div>
 
-          <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 ml-11">
-            Podaj URL swojego zdjęcia profilowego
-          </p>
-
           <div className="mt-6">
             <button 
               type="submit"
@@ -168,11 +173,10 @@ export default function ProfileForm() {
             </button>
           </div>
 
+          {/* Informacje o koncie */}
           <div className="mt-8 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Informacje o koncie
-            </h3>
-            <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Informacje o koncie</h3>
+            <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
               <p><strong>UID:</strong> {user.uid}</p>
               <p><strong>Email zweryfikowany:</strong> {user.emailVerified ? '✅ Tak' : '❌ Nie'}</p>
               <p><strong>Utworzono:</strong> {new Date(user.metadata.creationTime).toLocaleDateString('pl-PL')}</p>

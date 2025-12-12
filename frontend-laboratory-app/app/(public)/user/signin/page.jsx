@@ -24,6 +24,14 @@ export default function SignInForm() {
       .then(() => {
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
+            // Sprawdź czy email jest zweryfikowany
+            if (!userCredential.user.emailVerified) {
+              // Email NIE jest zweryfikowany - przekieruj do /user/verify
+              router.push('/user/verify');
+              return;
+            }
+
+            // Email jest zweryfikowany - normalnie przekieruj
             if (returnUrl) {
               router.push(returnUrl);
             } else {
