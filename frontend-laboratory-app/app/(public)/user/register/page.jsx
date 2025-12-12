@@ -75,8 +75,8 @@ export default function RegisterForm() {
   };
 
   return (
-    <section className="bg-white dark:bg-gray-900">
-      <div className="container flex items-center justify-center min-h-screen px-6 mx-auto">
+    <section className="bg-white dark:bg-gray-900 h-full">
+      <div className="container flex items-center justify-center h-full px-6 py-12 mx-auto">
         <form onSubmit={onSubmit} className="w-full max-w-md">
           <div className="flex justify-center mx-auto">
             <img className="w-auto h-7 sm:h-8" src="https://merakiui.com/images/logo.svg" alt="" />
