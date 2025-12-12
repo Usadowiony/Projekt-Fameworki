@@ -24,7 +24,11 @@ export default function SignInForm() {
       .then(() => {
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
-            router.push(returnUrl);
+            if (returnUrl) {
+              router.push(returnUrl);
+            } else {
+              router.push('/');
+            }
           })
           .catch((error) => {
             setLoading(false);
@@ -36,13 +40,11 @@ export default function SignInForm() {
               'auth/too-many-requests': 'Zbyt wiele prób logowania. Spróbuj później.'
             };
             setError(errorMessages[error.code] || error.message);
-            console.error(error.code, error.message);
           });
       })
       .catch(error => {
         setLoading(false);
         setError("Wystąpił błąd. Spróbuj ponownie.");
-        console.log(error);
       });
   };
 
