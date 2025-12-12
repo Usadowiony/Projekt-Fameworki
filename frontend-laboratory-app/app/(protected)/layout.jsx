@@ -1,5 +1,5 @@
 'use client'
-import { useAuth } from "@/app/lib/firebase/AuthContext";
+import { useAuth } from "@/app/lib/AuthContext";
 import { useLayoutEffect } from "react";
 import { redirect } from 'next/navigation';
 import { usePathname } from 'next/navigation';
@@ -10,9 +10,9 @@ function Protected({children}) {
 
     useLayoutEffect(() => {
         if (!user){
-            redirect(`/user/singin?returnUrl=${returnUrl}`);
+            redirect(`/user/signin?returnUrl=${returnUrl}`);
         }
-    }, []);
+    }, [user]);
     return ( <>
     { children }
     </> );

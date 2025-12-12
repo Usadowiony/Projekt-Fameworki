@@ -65,10 +65,7 @@ function Navbar() {
             {isLoggedIn ? (
               // WIDOK 1: Użytkownik ZALOGOWANY
               <button 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleLogout();
-                }} 
+                onClick={() => handleLogout()} 
                 className="px-3 py-2 mx-3 mt-2 text-white bg-red-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-red-600"
               >
                 Wyloguj
@@ -76,24 +73,18 @@ function Navbar() {
             ) : (
               // WIDOK 2: Użytkownik WYLOGOWANY
               <>
-                <button 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleLogout();
-                }} 
-                className="px-3 py-2 mx-3 mt-2 text-white bg-red-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-red-600"
-              >
-                Zaloguj
-              </button>
-                <button 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleLogout();
-                }} 
-                className="px-3 py-2 mx-3 mt-2 text-white bg-red-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-red-600"
-              >
-                Zarejestruj
-              </button>
+                <a 
+                  href="/user/signin"
+                  className="px-3 py-2 mx-3 mt-2 text-white bg-blue-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-blue-600"
+                >
+                  Zaloguj
+                </a>
+                <a 
+                  href="/user/register"
+                  className="px-3 py-2 mx-3 mt-2 text-white bg-green-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-green-600"
+                >
+                  Zarejestruj
+                </a>
               </>
             )}
           </div>
