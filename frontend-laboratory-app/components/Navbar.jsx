@@ -1,23 +1,21 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
+import { useAuth } from '@/app/lib/AuthContext';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const handleLogout = () => {
-    // tymczasowa logika logowania
-    setIsLoggedIn(false);
-  };
+  const { user, loading } = useAuth(); // Używamy prawdziwego stanu użytkownika z Firebase
 
   return (
     <nav className="relative bg-white shadow dark:bg-gray-800">
       <div className="container px-6 py-4 mx-auto">
         <div className="lg:flex lg:items-center lg:justify-between">
           <div className="flex items-center justify-between">
-            <a href="#">
+            <Link href="/">
               <img className="w-auto h-6 sm:h-7" src="https://merakiui.com/images/full-logo.svg" alt="Logo" />
-            </a>
+            </Link>
 
             {/* Mobile menu button */}
             <div className="flex lg:hidden">
@@ -47,47 +45,54 @@ function Navbar() {
             }`}
           >
             <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-8">
-              <a href="#" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                Jeden
-              </a>
-              <a href="#" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                Dwa
-              </a>
-              <a href="#" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                Trzy
-              </a>
-              <a href="#" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                Cztery
-              </a>
+              <Link href="/" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                Strona główna
+              </Link>
+              
+              {user && (
+                <>
+                  <Link href="/user/profile" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    Profil
+                  </Link>
+                  <Link href="/user/changepassword" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    Zmień hasło
+                  </Link>
+                </>
+              )}
             </div>
 
             <div className="flex items-center mt-4 lg:mt-0">
-            {isLoggedIn ? (
-              // WIDOK 1: Użytkownik ZALOGOWANY
-              <button 
-                onClick={() => handleLogout()} 
-                className="px-3 py-2 mx-3 mt-2 text-white bg-red-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-red-600"
-              >
-                Wyloguj
-              </button>
-            ) : (
-              // WIDOK 2: Użytkownik WYLOGOWANY
-              <>
-                <a 
-                  href="/user/signin"
-                  className="px-3 py-2 mx-3 mt-2 text-white bg-blue-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-blue-600"
+              {loading ? (
+                // Stan ładowania - pokazuj placeholder
+                <div className="px-3 py-2 mx-3 mt-2 text-gray-400 lg:mt-0">
+                  Ładowanie...
+                </div>
+              ) : user ? (
+                // WIDOK 1: Użytkownik ZALOGOWANY
+                <Link 
+                  href="/user/signout"
+                  className="px-3 py-2 mx-3 mt-2 text-white bg-red-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-red-600"
                 >
-                  Zaloguj
-                </a>
-                <a 
-                  href="/user/register"
-                  className="px-3 py-2 mx-3 mt-2 text-white bg-green-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-green-600"
-                >
-                  Zarejestruj
-                </a>
-              </>
-            )}
-          </div>
+                  Wyloguj
+                </Link>
+              ) : (
+                // WIDOK 2: Użytkownik WYLOGOWANY
+                <>
+                  <Link 
+                    href="/user/signin"
+                    className="px-3 py-2 mx-3 mt-2 text-white bg-blue-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-blue-600"
+                  >
+                    Zaloguj
+                  </Link>
+                  <Link 
+                    href="/user/register"
+                    className="px-3 py-2 mx-3 mt-2 text-white bg-green-500 transition-colors duration-300 transform rounded-md lg:mt-0 hover:bg-green-600"
+                  >
+                    Zarejestruj
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -1,14 +1,20 @@
 'use client'
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { auth } from "@/app/lib/firebase";
+import { useAuth } from "@/app/lib/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 
 export default function RegisterForm() {
+  const { user } = useAuth();
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  if (user) {
+    return null;
+  }
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -33,7 +39,17 @@ export default function RegisterForm() {
     
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        router.push("/user/profile");
+        console.log("User registered!");
+        
+        sendEmailVerification(auth.currentUser)
+          .then(() => {
+            console.log("Email verification sent!");
+            router.push("/user/verify");
+          })
+          .catch((error) => {
+            setError("Nie udało się wysłać emaila weryfikacyjnego");
+            setLoading(false);
+          });
       })
       .catch((error) => {
         setLoading(false);
@@ -44,7 +60,6 @@ export default function RegisterForm() {
           'auth/operation-not-allowed': 'Rejestracja jest obecnie wyłączona'
         };
         setError(errorMessages[error.code] || error.message);
-        console.error(error.code, error.message);
       });
   };
 
@@ -81,22 +96,6 @@ export default function RegisterForm() {
               </div>
             </div>
           )}
-
-          <div className="relative flex items-center mt-8">
-            <span className="absolute">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </span>
-
-            <input 
-              type="text" 
-              id="username"
-              name="username"
-              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" 
-              placeholder="Nazwa użytkownika"
-            />
-          </div>
 
           <div className="relative flex items-center mt-6">
             <span className="absolute">
