@@ -2,13 +2,19 @@
 import { useAuth } from "@/app/lib/AuthContext";
 import { useState, useEffect } from "react";
 import { db } from '@/app/lib/firebase';
-import { collection, query, where, getDocs, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, addDoc } from 'firebase/firestore';
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function GamesPage() {
   const { user } = useAuth();
+  const router = useRouter();
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [numPlayers, setNumPlayers] = useState(2);
+  const [playerNames, setPlayerNames] = useState(["", ""]);
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -16,10 +22,7 @@ export default function GamesPage() {
       
       setLoading(true);
       try {
-        // Tworzymy referencję do dokumentu użytkownika (bo pole "user" w Firebase to reference, nie string)
         const userRef = doc(db, "users", user.uid);
-        
-        // Filtrujemy gry - pobierz tylko te gdzie user == userRef
         const q = query(
           collection(db, "games"), 
           where("user", "==", userRef)
@@ -46,6 +49,50 @@ export default function GamesPage() {
     fetchGames();
   }, [user?.uid]);
 
+  const handleNumPlayersChange = (num) => {
+    setNumPlayers(num);
+    setPlayerNames(Array(num).fill(""));
+  };
+
+  const handlePlayerNameChange = (index, name) => {
+    const newNames = [...playerNames];
+    newNames[index] = name;
+    setPlayerNames(newNames);
+  };
+
+  const createNewGame = async () => {
+    if (playerNames.some(name => !name.trim())) {
+      alert("Wypełnij wszystkie imiona graczy");
+      return;
+    }
+
+    setCreating(true);
+    try {
+      const userRef = doc(db, "users", user.uid);
+      
+      const newGame = {
+        user: userRef,
+        createdAt: new Date(),
+        status: "active",
+        currentPlayer: 1,
+        players: playerNames.map((name, index) => ({
+          id: index + 1,
+          name: name.trim(),
+          score: 0
+        })),
+        board: [],
+        currentMove: []
+      };
+
+      const docRef = await addDoc(collection(db, "games"), newGame);
+      router.push(`/games/${docRef.id}`);
+    } catch (error) {
+      console.error("Błąd podczas tworzenia gry:", error);
+      alert("Nie udało się utworzyć gry");
+      setCreating(false);
+    }
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
@@ -63,11 +110,80 @@ export default function GamesPage() {
           </h1>
           
           <button
+            onClick={() => setShowModal(true)}
             className="px-8 py-4 text-lg font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
           >
             + Rozpocznij nową grę
           </button>
         </div>
+
+        {/* Modal nowej gry */}
+        {showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
+              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">
+                Utwórz nową grę
+              </h2>
+
+              {/* Liczba graczy */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                  Liczba graczy
+                </label>
+                <div className="flex gap-2">
+                  {[2, 3, 4].map(num => (
+                    <button
+                      key={num}
+                      onClick={() => handleNumPlayersChange(num)}
+                      className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                        numPlayers === num
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Imiona graczy */}
+              <div className="mb-6 space-y-3">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Imiona graczy
+                </label>
+                {playerNames.map((name, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    value={name}
+                    onChange={(e) => handlePlayerNameChange(index, e.target.value)}
+                    placeholder={`Gracz ${index + 1}`}
+                    className="w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
+                  />
+                ))}
+              </div>
+
+              {/* Przyciski */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowModal(false)}
+                  disabled={creating}
+                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors disabled:opacity-50"
+                >
+                  Anuluj
+                </button>
+                <button
+                  onClick={createNewGame}
+                  disabled={creating}
+                  className="flex-1 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-400 transition-colors disabled:opacity-50"
+                >
+                  {creating ? 'Tworzenie...' : 'Rozpocznij'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Lista gier */}
         <div className="max-w-4xl mx-auto">
