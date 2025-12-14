@@ -2,7 +2,7 @@
 import { useAuth } from "@/app/lib/AuthContext";
 import { useState, useEffect } from "react";
 import { db } from '@/app/lib/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc } from 'firebase/firestore';
 import Link from "next/link";
 
 export default function GamesPage() {
@@ -16,9 +16,13 @@ export default function GamesPage() {
       
       setLoading(true);
       try {
+        // Tworzymy referencję do dokumentu użytkownika (bo pole "user" w Firebase to reference, nie string)
+        const userRef = doc(db, "users", user.uid);
+        
+        // Filtrujemy gry - pobierz tylko te gdzie user == userRef
         const q = query(
           collection(db, "games"), 
-          where("user", "==", user.uid)
+          where("user", "==", userRef)
         );
         
         const querySnapshot = await getDocs(q);
