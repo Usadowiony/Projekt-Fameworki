@@ -103,13 +103,6 @@ export default function Home() {
                         <code>npx playwright test</code>
                       </pre>
                     </div>
-                    
-                    <div>
-                      <p className="text-gray-700 dark:text-gray-300 font-semibold">Testy w trybie UI:</p>
-                      <pre className="mt-2 p-4 dark:bg-[#1b1d1f] text-gray-100 rounded-lg overflow-x-auto">
-                        <code>npx playwright test --ui</code>
-                      </pre>
-                    </div>
 
                     <div className="mt-4">
                       <p className="text-gray-700 dark:text-gray-300 mb-2">Zakres testów:</p>
