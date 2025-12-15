@@ -64,7 +64,7 @@ function BoardCell({ x, y, tile, tileColor, isTempTile, isStartTile, selectedTil
   );
 }
 
-function PlayerTileRack({ tiles, selectedIndex, onTileClick }) {
+function PlayerTileRack({ tiles, selectedIndex, onTileClick, playerColor }) {
   return (
     <div className="flex gap-2 flex-wrap justify-center">
       {tiles.map((letter, index) => (
@@ -74,7 +74,7 @@ function PlayerTileRack({ tiles, selectedIndex, onTileClick }) {
           className={`w-12 h-12 rounded-lg font-bold text-lg transition-all ${
             selectedIndex === index
               ? 'bg-green-500 text-white ring-4 ring-green-300 scale-110'
-              : 'bg-amber-100 dark:bg-amber-700 text-gray-900 dark:text-white hover:bg-amber-200 dark:hover:bg-amber-600'
+              : `${playerColor.bg} text-white hover:${playerColor.bgLight}`
           }`}
         >
           {letter}
@@ -452,6 +452,7 @@ export default function ScrabbleBoard({ game, gameId, onGameUpdate }) {
           tiles={playerTiles}
           selectedIndex={selectedTile?.index}
           onTileClick={handleTileClick}
+          playerColor={PLAYER_COLORS[currentPlayer?.color] || PLAYER_COLORS['teal']}
         />
       </div>
 

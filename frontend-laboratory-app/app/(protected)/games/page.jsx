@@ -398,9 +398,9 @@ export default function GamesPage() {
           
           <button
             onClick={() => setShowModal(true)}
-            className="px-8 py-4 text-lg font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+            className="px-6 py-4 text-md font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
           >
-            + Rozpocznij nową grę
+            Rozpocznij nową grę
           </button>
         </div>
 
