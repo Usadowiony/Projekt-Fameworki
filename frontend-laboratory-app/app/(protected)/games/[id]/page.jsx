@@ -43,7 +43,7 @@ export default function GameDetailPage({ params }) {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#1b1d1f]">
         <p className="text-gray-600 dark:text-gray-400">Ładowanie...</p>
       </div>
     );
@@ -51,7 +51,7 @@ export default function GameDetailPage({ params }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#1b1d1f]">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           <p className="mt-4 text-gray-600 dark:text-gray-400">Ładowanie gry...</p>
@@ -62,7 +62,7 @@ export default function GameDetailPage({ params }) {
 
   if (error || !game) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#1b1d1f]">
         <div className="text-center">
           <p className="text-red-500 dark:text-red-400 mb-4">{error || "Gra nie została znaleziona"}</p>
           <Link href="/games" className="text-blue-500 hover:underline">
@@ -74,7 +74,7 @@ export default function GameDetailPage({ params }) {
   }
 
   return (
-    <section className="bg-white dark:bg-gray-900 min-h-screen">
+    <section className="bg-white dark:bg-[#1b1d1f] min-h-screen">
       <div className="container px-6 py-12 mx-auto">
         <Link href="/games" className="text-blue-500 hover:underline mb-4 inline-block">
           ← Powrót do listy gier

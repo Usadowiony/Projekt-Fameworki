@@ -18,7 +18,7 @@ export default function LogoutForm() {
   };
 
   return (
-    <section className="bg-white dark:bg-gray-900 h-full">
+    <section className="bg-white dark:bg-[#1b1d1f] h-full">
       <div className="container flex items-center justify-center h-full px-6 py-12 mx-auto">
         <div className="w-full max-w-md">
           <div className="flex justify-center mx-auto">

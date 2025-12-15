@@ -92,7 +92,7 @@ export default function ProfileForm() {
   };
 
   return (
-    <section className="bg-white dark:bg-gray-900 h-full">
+    <section className="bg-white dark:bg-[#1b1d1f] h-full">
       <div className="container flex items-center justify-center h-full px-6 py-12 mx-auto">
         <form onSubmit={onSubmit} className="w-full max-w-md">
           <div className="flex justify-center mx-auto mb-6">
@@ -105,7 +105,7 @@ export default function ProfileForm() {
 
           {/* Alert sukcesu */}
           {success && (
-            <div className="flex w-full mt-6 overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+            <div className="flex w-full mt-6 overflow-hidden bg-white rounded-lg shadow-md dark:bg-[#121212]">
               <div className="flex items-center justify-center w-12 bg-green-500">
                 <svg className="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
                   <path d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z" />
@@ -122,7 +122,7 @@ export default function ProfileForm() {
 
           {/* Alert błędu */}
           {error && (
-            <div className="flex w-full mt-6 overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+            <div className="flex w-full mt-6 overflow-hidden bg-white rounded-lg shadow-md dark:bg-[#121212]">
               <div className="flex items-center justify-center w-12 bg-red-500">
                 <svg className="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
                   <path d="M20 3.36667C10.8167 3.36667 3.3667 10.8167 3.3667 20C3.3667 29.1833 10.8167 36.6333 20 36.6333C29.1834 36.6333 36.6334 29.1833 36.6334 20C36.6334 10.8167 29.1834 3.36667 20 3.36667ZM19.1334 33.3333V22.9H13.3334L21.6667 6.66667V17.1H27.25L19.1334 33.3333Z" />
@@ -164,7 +164,7 @@ export default function ProfileForm() {
               name="displayName"
               defaultValue={user.displayName || ""}
               placeholder="Nazwa użytkownika"
-              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" 
+              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-[#1b1d1f] dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" 
             />
           </div>
 
@@ -183,7 +183,7 @@ export default function ProfileForm() {
               value={user.email || ""}
               readOnly
               disabled
-              className="block w-full py-3 text-gray-500 bg-gray-100 border rounded-lg px-11 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 cursor-not-allowed" 
+              className="block w-full py-3 text-gray-500 bg-gray-100 border rounded-lg px-11 dark:bg-[#1b1d1f] dark:text-gray-400 dark:border-gray-600 cursor-not-allowed" 
             />
           </div>
 
@@ -201,7 +201,7 @@ export default function ProfileForm() {
               name="photoURL"
               defaultValue={user.photoURL || ""}
               placeholder="https://example.com/photo.jpg"
-              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" 
+              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-[#1b1d1f] dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" 
             />
           </div>
 
@@ -221,7 +221,7 @@ export default function ProfileForm() {
               onChange={(e) => setAddress({ ...address, street: e.target.value })}
               disabled={loadingAddress}
               placeholder="Ulica i numer"
-              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 disabled:opacity-50 disabled:cursor-not-allowed" 
+              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-[#1b1d1f] dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 disabled:opacity-50 disabled:cursor-not-allowed" 
             />
           </div>
 
@@ -241,7 +241,7 @@ export default function ProfileForm() {
               onChange={(e) => setAddress({ ...address, city: e.target.value })}
               disabled={loadingAddress}
               placeholder="Miasto"
-              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 disabled:opacity-50 disabled:cursor-not-allowed" 
+              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-[#1b1d1f] dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 disabled:opacity-50 disabled:cursor-not-allowed" 
             />
           </div>
 
@@ -262,7 +262,7 @@ export default function ProfileForm() {
               onChange={(e) => setAddress({ ...address, zipCode: e.target.value })}
               disabled={loadingAddress}
               placeholder="Kod pocztowy"
-              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 disabled:opacity-50 disabled:cursor-not-allowed" 
+              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-[#1b1d1f] dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 disabled:opacity-50 disabled:cursor-not-allowed" 
             />
           </div>
 
@@ -277,7 +277,7 @@ export default function ProfileForm() {
           </div>
 
           {/* Informacje o koncie */}
-          <div className="mt-8 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+          <div className="mt-8 p-4 bg-gray-100 dark:bg-[#121212] rounded-lg">
             <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Informacje o koncie</h3>
             <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
               <p><strong>UID:</strong> {user.uid}</p>

@@ -45,7 +45,7 @@ function DeleteConfirmModal({ isOpen, gameToDelete, deleting, onCancel, onConfir
   
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
+      <div className="bg-white dark:bg-[#121212] rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
           Usuń grę?
         </h2>
@@ -114,7 +114,7 @@ function CreateGameModal({
   
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
+      <div className="bg-white dark:bg-[#121212] rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">
           Utwórz nową grę
         </h2>
@@ -151,7 +151,7 @@ function CreateGameModal({
                 value={name}
                 onChange={(e) => onPlayerNameChange(index, e.target.value)}
                 placeholder={`Imię gracza ${index + 1}`}
-                className="flex-1 px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
+                className="flex-1 px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-[#1b1d1f] dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
               />
               
               <ColorPickerInline
@@ -186,7 +186,7 @@ function CreateGameModal({
 
 function GameCard({ game, onDelete }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+    <div className="bg-white dark:bg-[#121212] rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
       <div className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
@@ -382,14 +382,14 @@ export default function GamesPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#1b1d1f]">
         <p className="text-gray-600 dark:text-gray-400">Ładowanie...</p>
       </div>
     );
   }
 
   return (
-    <section className="bg-white dark:bg-gray-900 min-h-screen">
+    <section className="bg-white dark:bg-[#1b1d1f] min-h-screen">
       <div className="container px-6 py-12 mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-3xl font-semibold text-gray-800 dark:text-white mb-6">
@@ -441,7 +441,7 @@ export default function GamesPage() {
               </div>
             </div>
           ) : games.length === 0 ? (
-            <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <div className="text-center py-12 bg-gray-50 dark:bg-[#121212] rounded-lg">
               <svg className="mx-auto h-24 w-24 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>

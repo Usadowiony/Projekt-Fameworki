@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect } from 'react';
 import { db } from '@/app/lib/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -93,7 +93,7 @@ function TileBagModal({ isOpen, tiles, onClose }) {
       onClick={onClose}
     >
       <div 
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto"
+        className="bg-white dark:bg-[#121212] rounded-lg shadow-xl p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-4">
@@ -134,7 +134,7 @@ function PointsModal({ isOpen, points, onPointsChange, onConfirm, onCancel }) {
       onClick={onCancel}
     >
       <div 
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 max-w-sm w-full mx-4"
+        className="bg-white dark:bg-[#121212] rounded-lg shadow-xl p-8 max-w-sm w-full mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-6 text-center">
@@ -153,7 +153,7 @@ function PointsModal({ isOpen, points, onPointsChange, onConfirm, onCancel }) {
             type="number"
             value={points}
             onChange={(e) => onPointsChange(Math.max(0, parseInt(e.target.value) || 0))}
-            className="w-24 h-12 text-center text-2xl font-bold border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="w-24 h-12 text-center text-2xl font-bold border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1b1d1f] text-gray-900 dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             min="0"
           />
           
@@ -391,7 +391,7 @@ export default function ScrabbleBoard({ game, gameId, onGameUpdate }) {
   };
   
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+    <div className="bg-white dark:bg-[#121212] rounded-lg shadow-lg p-6">
       {/* Gracze */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Gracze</h2>
@@ -456,10 +456,10 @@ export default function ScrabbleBoard({ game, gameId, onGameUpdate }) {
       </div>
 
       {/* Przyciski */}
-      <div className="flex gap-3 justify-center">
+      <div className="flex gap-1 sm:gap-2 md:gap-3 justify-center flex-wrap">
         <button
           onClick={() => setShowTileBagModal(true)}
-          className="px-6 py-3 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors flex items-center gap-2"
+          className="px-2 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3 bg-amber-500 text-white rounded-lg text-sm sm:text-base font-medium hover:bg-amber-600 transition-colors flex items-center gap-1 sm:gap-2"
           title="Pokaż pozostałe literki"
         >
           Worek ({game.availableTiles?.length || 0})
@@ -467,21 +467,21 @@ export default function ScrabbleBoard({ game, gameId, onGameUpdate }) {
         <button
           onClick={handleReset}
           disabled={(placedTiles.length === 0 && pointsToAssign === 0) || saving}
-          className="px-6 py-3 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-2 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3 bg-gray-500 text-white rounded-lg text-sm sm:text-base font-medium hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Zresetuj
         </button>
         <button
           onClick={() => setShowPointsModal(true)}
           disabled={saving}
-          className="px-6 py-3 bg-purple-500 text-white rounded-lg font-medium hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-2 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3 bg-purple-500 text-white rounded-lg text-sm sm:text-base font-medium hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Przydziel punkty {pointsToAssign > 0 && `(${pointsToAssign})`}
         </button>
         <button
           onClick={handleConfirm}
           disabled={placedTiles.length === 0 || saving}
-          className="px-6 py-3 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-2 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3 bg-green-500 text-white rounded-lg text-sm sm:text-base font-medium hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? 'Zapisywanie...' : 'Zatwierdź ruch'}
         </button>

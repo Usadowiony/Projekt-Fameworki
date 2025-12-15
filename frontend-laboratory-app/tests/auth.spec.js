@@ -1,12 +1,12 @@
 const { test, expect } = require('@playwright/test');
 
-test.describe('Authentication flow', () => {
-  test('should redirect unauthenticated user to login page when accessing profile', async ({ page }) => {
+test.describe('Test logowania', () => {
+  test('sprawdzamy czy niezalogowany uzytkownik zostanie przeniesiony na strone logowania', async ({ page }) => {
     await page.goto('http://localhost:3000/user/profile');
     await expect(page).toHaveURL(/.*\/user\/signin/);
   });
 
-  test('should login successfully and access profile page', async ({ page }) => {
+  test('sprawdzamy czy mozna sie poprawnie zalogowac i przejsc do profilu', async ({ page }) => {
     await page.goto('http://localhost:3000/user/signin');
     await page.fill('input[type="email"]', 'wojciechpietrzak2003@gmail.com');
     await page.fill('input[type="password"]', 'haslo123');
@@ -18,7 +18,7 @@ test.describe('Authentication flow', () => {
     await expect(page.locator('input[name="displayName"]')).toBeVisible();
   });
 
-  test('should stay on profile page after successful login', async ({ page }) => {
+  test('sprawdzamy czy pozostajemy na stronie profilu po poprawnym zalogowaniu', async ({ page }) => {
     await page.goto('http://localhost:3000/user/signin');
     await page.fill('input[type="email"]', 'wojciechpietrzak2003@gmail.com');
     await page.fill('input[type="password"]', 'haslo123');
