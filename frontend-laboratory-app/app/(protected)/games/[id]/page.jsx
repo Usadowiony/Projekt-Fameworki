@@ -13,29 +13,33 @@ export default function GameDetailPage({ params }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchGame = async () => {
-      if (!user?.uid) return;
+  const fetchGame = async () => {
+    if (!user?.uid) return;
+    
+    setLoading(true);
+    try {
+      const gameDoc = await getDoc(doc(db, "games", resolvedParams.id));
       
-      setLoading(true);
-      try {
-        const gameDoc = await getDoc(doc(db, "games", resolvedParams.id));
-        
-        if (gameDoc.exists()) {
-          setGame({ id: gameDoc.id, ...gameDoc.data() });
-        } else {
-          setError("Gra nie istnieje");
-        }
-      } catch (error) {
-        console.error("Błąd podczas pobierania gry:", error);
-        setError(error.message);
-      } finally {
-        setLoading(false);
+      if (gameDoc.exists()) {
+        setGame({ id: gameDoc.id, ...gameDoc.data() });
+      } else {
+        setError("Gra nie istnieje");
       }
-    };
+    } catch (error) {
+      console.error("Błąd podczas pobierania gry:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchGame();
   }, [user?.uid, resolvedParams.id]);
+
+  const refreshGame = () => {
+    fetchGame();
+  };
 
   if (!user) {
     return (
@@ -88,7 +92,7 @@ export default function GameDetailPage({ params }) {
         </div>
 
         {/* Komponent Scrabble */}
-        <ScrabbleBoard game={game} />
+        <ScrabbleBoard game={game} gameId={resolvedParams.id} onGameUpdate={refreshGame} />
       </div>
     </section>
   );
